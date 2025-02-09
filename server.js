@@ -18,16 +18,22 @@ app.get("/todos", (req, res) => {
     .map(
       (todo) => `
         <div id="todo-${todo.id}" class="todo-item">
-            <input type="checkbox" ${todo.completed ? "checked" : ""}
+            <input
+                type="checkbox"
+                ${todo.completed ? "checked" : ""}
                 hx-post="/toggle/${todo.id}"
                 hx-target="#todo-${todo.id}"
                 hx-swap="outerHTML">
-            <span class="${todo.completed ? "completed" : ""}">${
-        todo.text
-      }</span>
-            <button hx-delete="/todos/${todo.id}"
-                    hx-target="#todo-${todo.id}"
-                    hx-swap="outerHTML">Delete</button>
+            <span
+                class="${todo.completed ? "completed" : ""}">
+                ${todo.text}
+            </span>
+            <button
+                hx-delete="/todos/${todo.id}"
+                hx-target="#todo-${todo.id}"
+                hx-swap="outerHTML">
+                Delete
+            </button>
         </div>
     `
     )
@@ -44,14 +50,18 @@ app.post("/todos", (req, res) => {
   todos.push(newTodo);
   res.send(`
         <div id="todo-${newTodo.id}" class="todo-item">
-            <input type="checkbox"
+            <input
+                type="checkbox"
                 hx-post="/toggle/${newTodo.id}"
                 hx-target="#todo-${newTodo.id}"
                 hx-swap="outerHTML">
             <span>${newTodo.text}</span>
-            <button hx-delete="/todos/${newTodo.id}"
-                    hx-target="#todo-${newTodo.id}"
-                    hx-swap="outerHTML">Delete</button>
+            <button
+                hx-delete="/todos/${newTodo.id}"
+                hx-target="#todo-${newTodo.id}"
+                hx-swap="outerHTML">
+                Delete
+            </button>
         </div>
     `);
 });
@@ -63,16 +73,22 @@ app.post("/toggle/:id", (req, res) => {
     todo.completed = !todo.completed;
     res.send(`
             <div id="todo-${todo.id}" class="todo-item">
-                <input type="checkbox" ${todo.completed ? "checked" : ""}
+                <input
+                    type="checkbox"
+                    ${todo.completed ? "checked" : ""}
                     hx-post="/toggle/${todo.id}"
                     hx-target="#todo-${todo.id}"
                     hx-swap="outerHTML">
-                <span class="${todo.completed ? "completed" : ""}">${
-      todo.text
-    }</span>
-                <button hx-delete="/todos/${todo.id}"
-                        hx-target="#todo-${todo.id}"
-                        hx-swap="outerHTML">Delete</button>
+                <span
+                    class="${todo.completed ? "completed" : ""}">
+                    ${todo.text}
+                </span>
+                <button
+                    hx-delete="/todos/${todo.id}"
+                    hx-target="#todo-${todo.id}"
+                    hx-swap="outerHTML">
+                    Delete
+                </button>
             </div>
         `);
   } else {
