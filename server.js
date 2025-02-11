@@ -1,4 +1,3 @@
-// server.js
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
@@ -6,13 +5,16 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
+// In-memory database
 let todos = [];
 let idCounter = 1;
 
+// GET / - Serve the index.html file
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/public/index.html");
 });
 
+// GET /todos - Return the list of todos
 app.get("/todos", (req, res) => {
   const todoList = todos
     .map(
@@ -21,7 +23,7 @@ app.get("/todos", (req, res) => {
             <input
                 type="checkbox"
                 ${todo.completed ? "checked" : ""}
-                hx-post="/toggle/${todo.id}"
+                hx-patch="/toggle/${todo.id}"
                 hx-target="#todo-${todo.id}"
                 hx-swap="outerHTML">
             <span
@@ -41,6 +43,7 @@ app.get("/todos", (req, res) => {
   res.send(todoList);
 });
 
+// POST /todos - Add a new todo
 app.post("/todos", (req, res) => {
   const newTodo = {
     id: idCounter++,
@@ -52,7 +55,7 @@ app.post("/todos", (req, res) => {
         <div id="todo-${newTodo.id}" class="todo-item">
             <input
                 type="checkbox"
-                hx-post="/toggle/${newTodo.id}"
+                hx-patch="/toggle/${newTodo.id}"
                 hx-target="#todo-${newTodo.id}"
                 hx-swap="outerHTML">
             <span>${newTodo.text}</span>
@@ -66,7 +69,8 @@ app.post("/todos", (req, res) => {
     `);
 });
 
-app.post("/toggle/:id", (req, res) => {
+// PATCH /toggle/:id - Toggle the completed status of a todo
+app.patch("/toggle/:id", (req, res) => {
   const id = parseInt(req.params.id);
   const todo = todos.find((t) => t.id === id);
   if (todo) {
@@ -76,7 +80,7 @@ app.post("/toggle/:id", (req, res) => {
                 <input
                     type="checkbox"
                     ${todo.completed ? "checked" : ""}
-                    hx-post="/toggle/${todo.id}"
+                    hx-patch="/toggle/${todo.id}"
                     hx-target="#todo-${todo.id}"
                     hx-swap="outerHTML">
                 <span
@@ -96,12 +100,14 @@ app.post("/toggle/:id", (req, res) => {
   }
 });
 
+// DELETE /todos/:id - Delete a todo
 app.delete("/todos/:id", (req, res) => {
   const id = parseInt(req.params.id);
   todos = todos.filter((t) => t.id !== id);
   res.send("");
 });
 
+// Start the server
 app.listen(3000, () => {
   console.log("Server started at http://localhost:3000");
 });
